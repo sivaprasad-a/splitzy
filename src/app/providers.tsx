@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Provider } from "react-redux";
 import { ThemeProvider, CssBaseline } from "@mui/material";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v16-appRouter";
 import { SessionProvider } from "next-auth/react";
 
 import { makeStore } from "@/lib/store/store";
@@ -12,13 +13,15 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const [store] = useState(makeStore);
 
   return (
-    <SessionProvider>
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          {children}
-        </ThemeProvider>
-      </Provider>
-    </SessionProvider>
+    <AppRouterCacheProvider>
+      <SessionProvider>
+        <Provider store={store}>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            {children}
+          </ThemeProvider>
+        </Provider>
+      </SessionProvider>
+    </AppRouterCacheProvider>
   );
 }
