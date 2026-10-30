@@ -46,3 +46,6 @@ next-env.d.ts
 /test-results
 *.lcov
 
+# claude code local settings (personal, not team policy)
+.claude/settings.local.json
+
