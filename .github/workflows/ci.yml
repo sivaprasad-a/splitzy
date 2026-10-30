@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main, develop, "uat/testing", "production/release", "sprint-*"]
+  push:
+    branches: [develop, "uat/testing", "production/release"]
+
+env:
+  DATABASE_URL: postgresql://splitzy:splitzy@localhost:5432/splitzy_dev?schema=public
+
+jobs:
+  typecheck-and-unit:
+    name: Typecheck / lint / unit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test
+
+  api-and-e2e:
+    name: API & E2E
+    runs-on: ubuntu-latest
+    needs: typecheck-and-unit
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: splitzy
+          POSTGRES_PASSWORD: splitzy
+          POSTGRES_DB: splitzy_dev
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U splitzy -d splitzy_dev"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npx prisma migrate deploy
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+
+  dependency-scan:
+    name: Dependency scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      # Production dependencies gate the build; dev-only tooling CVEs (e.g.
+      # the current Prisma CLI config chain) are tracked but don't block CI.
+      - run: npm audit --omit=dev --audit-level=high
