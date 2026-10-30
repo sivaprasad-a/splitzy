@@ -30,15 +30,17 @@ Each delivery phase from the technical spec is a sprint branch cut from
 - `sprint-5-future-scale` — service extraction, background workers, corporate approvals, payment settlement
 
 Within a sprint, each task gets its own branch off the sprint branch, named
-`<sprint-branch>/<task-slug>`, e.g.:
+`<sprint-branch>-task/<task-slug>` (a plain `<sprint-branch>/<task-slug>`
+name collides with the sprint branch itself in git's ref namespace, since a
+ref can't be both a leaf and a path prefix), e.g.:
 
 ```
-sprint-1-foundation/nextjs-pwa-scaffold
-sprint-1-foundation/design-system
-sprint-1-foundation/auth
-sprint-1-foundation/postgres-prisma
-sprint-1-foundation/ci-cd
-sprint-1-foundation/env-isolation
+sprint-1-foundation-task/nextjs-pwa-scaffold
+sprint-1-foundation-task/design-system
+sprint-1-foundation-task/auth
+sprint-1-foundation-task/postgres-prisma
+sprint-1-foundation-task/ci-cd
+sprint-1-foundation-task/env-isolation
 ```
 
 ### Flow
