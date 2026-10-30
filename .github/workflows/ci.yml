@@ -62,6 +62,7 @@ jobs:
           node-version: 20
           cache: npm
       - run: npm ci
-      # Production dependencies gate the build; dev-only tooling CVEs (e.g.
-      # the current Prisma CLI config chain) are tracked but don't block CI.
-      - run: npm audit --omit=dev --audit-level=high
+      # Production+optional dependencies gate the build; dev-only tooling CVEs
+      # (e.g. the Prisma CLI's @prisma/config chain, pulled in only as an
+      # optional peer of @prisma/client) are tracked but don't block CI.
+      - run: npm audit --omit=dev --omit=optional --audit-level=high
