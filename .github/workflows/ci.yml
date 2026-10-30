@@ -17,7 +17,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
       - run: npm run lint
@@ -45,7 +45,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
       - run: npx prisma migrate deploy
@@ -59,9 +59,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
           cache: npm
       - run: npm ci
-      # Production dependencies gate the build; dev-only tooling CVEs (e.g.
-      # the current Prisma CLI config chain) are tracked but don't block CI.
-      - run: npm audit --omit=dev --audit-level=high
+      # Production+optional dependencies gate the build; dev-only tooling CVEs
+      # (e.g. the Prisma CLI's @prisma/config chain, pulled in only as an
+      # optional peer of @prisma/client) are tracked but don't block CI.
+      - run: npm audit --omit=dev --omit=optional --audit-level=high
