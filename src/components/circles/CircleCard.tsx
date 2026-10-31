@@ -1,36 +1,66 @@
 import Link from "next/link";
-import { Avatar, Paper, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 
 import { formatSignedCurrency, type Currency } from "@/lib/format/currency";
-import { BRAND_TINT } from "@/lib/theme/theme";
+import { BRAND_COLORS, CARD_SHADOW } from "@/lib/theme/theme";
+import { getMember } from "@/lib/domain/mock-data";
 import type { Circle } from "@/lib/domain/types";
-import { MemberAvatars } from "./MemberAvatars";
 
 export function CircleCard({ circle, currency }: { circle: Circle; currency: Currency }) {
+  const initials = circle.memberIds.slice(0, 3).map((id) => getMember(id)?.initials ?? "?");
+
   return (
-    <Paper
+    <Box
       component={Link}
       href={`/circles/${circle.id}`}
-      variant="outlined"
-      sx={{ p: 3, borderRadius: 3, display: "block", textDecoration: "none", color: "inherit", flex: "1 1 260px" }}
+      sx={{
+        display: "block",
+        bgcolor: "white",
+        border: "1px solid",
+        borderColor: BRAND_COLORS.cardBorder,
+        borderRadius: "21px",
+        boxShadow: CARD_SHADOW,
+        p: "23px",
+        minHeight: 210,
+        flex: "1 1 260px",
+        transition: "transform .2s",
+        "&:hover": { transform: "translateY(-5px)" },
+      }}
     >
-      <Stack spacing={2}>
-        <Avatar sx={{ bgcolor: BRAND_TINT, color: "primary.main", fontWeight: 700 }}>
-          {circle.name.charAt(0)}
-        </Avatar>
-        <Stack spacing={0.25}>
-          <Typography sx={{ fontWeight: 700 }}>{circle.name}</Typography>
-          <Typography variant="body2" color="text.secondary" sx={{ textTransform: "capitalize" }}>
-            {circle.groupType} · {circle.memberIds.length} members
-          </Typography>
-        </Stack>
-        <Stack direction="row" sx={{ alignItems: "center", justifyContent: "space-between" }}>
-          <MemberAvatars memberIds={circle.memberIds} />
-          <Typography sx={{ fontWeight: 700 }} color={circle.netBalanceCents >= 0 ? "success.main" : "error.main"}>
-            {formatSignedCurrency(circle.netBalanceCents, currency)}
-          </Typography>
-        </Stack>
+      <Box
+        sx={{
+          width: 55,
+          height: 55,
+          borderRadius: "13px",
+          bgcolor: "#E9F4FF",
+          display: "grid",
+          placeItems: "center",
+          fontSize: 24,
+        }}
+      >
+        {circle.icon}
+      </Box>
+      <Typography sx={{ fontSize: 15, fontWeight: 800, mt: "18px", mb: "6px" }}>
+        {circle.name}
+      </Typography>
+      <Typography sx={{ color: "text.secondary", fontSize: 12, textTransform: "capitalize" }}>
+        {circle.groupType} circle · {circle.memberIds.length} members
+      </Typography>
+      <Stack
+        direction="row"
+        sx={{
+          justifyContent: "space-between",
+          borderTop: "1px solid #E9EEF6",
+          mt: "24px",
+          pt: "16px",
+          fontSize: 11,
+        }}
+      >
+        <Typography sx={{ fontSize: 11, color: "text.secondary" }}>{initials.join(" · ")}</Typography>
+        <Typography sx={{ fontSize: 11, fontWeight: 800 }} color={circle.netBalanceCents >= 0 ? "success.main" : "error.main"}>
+          {formatSignedCurrency(circle.netBalanceCents, currency)}
+        </Typography>
       </Stack>
-    </Paper>
+    </Box>
   );
 }

@@ -5,21 +5,16 @@ import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {
-  Button,
-  Checkbox,
-  FormControlLabel,
-  MenuItem,
-  Paper,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Checkbox, FormControlLabel, MenuItem, Stack, Typography } from "@mui/material";
 
 import { useAppSelector } from "@/lib/store/hooks";
 import { circles, getCircle, getMember } from "@/lib/domain/mock-data";
 import { splitByPercentage, splitByShares, splitEqual, splitExact } from "@/lib/split/calculateSplit";
 import type { SplitMode } from "@/lib/domain/types";
+import { ActionButton } from "@/components/common/ActionButton";
+import { FormField } from "@/components/common/FormField";
+import { PageHeader } from "@/components/common/PageHeader";
+import { SoftCard } from "@/components/common/SoftCard";
 import { SplitModeTabs } from "@/components/expenses/SplitModeTabs";
 import { AllocationPreview } from "@/components/expenses/AllocationPreview";
 
@@ -100,56 +95,46 @@ function AddExpenseForm() {
   }
 
   return (
-    <Stack spacing={4}>
-      <Stack spacing={0.5}>
-        <Typography variant="overline" color="text.secondary">
-          Workspace / Shared expense
-        </Typography>
-        <Typography variant="h4" sx={{ fontWeight: 700 }}>
-          Add a new expense
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          A guided split flow: detail, payer, participants, allocation, review.
-        </Typography>
-      </Stack>
+    <Box>
+      <PageHeader
+        eyebrow="Guided split flow"
+        title="Add a new expense"
+        subtitle="Detail, payer, participants, allocation, review."
+      />
 
-      <Stack direction={{ xs: "column", md: "row" }} spacing={3} sx={{ alignItems: "flex-start" }}>
-        <Paper variant="outlined" sx={{ p: 3, borderRadius: 3, flex: 1.4, width: "100%" }}>
-          <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
-            Expense details
-          </Typography>
+      <Stack direction={{ xs: "column", md: "row" }} spacing="18px" sx={{ alignItems: "flex-start" }}>
+        <SoftCard sx={{ flex: 1.4, width: "100%" }}>
+          <Typography sx={{ fontSize: 15, fontWeight: 800, mb: "16px" }}>Expense details</Typography>
 
-          <Stack spacing={2.5}>
-            <TextField
+          <Stack spacing="18px">
+            <FormField
               label="Expense title"
-              fullWidth
+              placeholder="Friday dinner at North Italia"
               {...register("title")}
               error={!!errors.title}
               helperText={errors.title?.message}
             />
-            <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-              <TextField
+            <Stack direction={{ xs: "column", sm: "row" }} spacing="16px">
+              <FormField
                 label="Amount"
                 type="number"
-                fullWidth
                 slotProps={{ htmlInput: { step: "0.01", min: 0 } }}
                 {...register("amount", { valueAsNumber: true })}
                 error={!!errors.amount}
                 helperText={errors.amount?.message}
               />
-              <TextField label="Paid by" select fullWidth defaultValue="you" {...register("payerId")}>
+              <FormField label="Paid by" select defaultValue="you" {...register("payerId")}>
                 {circleMembers.map((member) => (
                   <MenuItem key={member.id} value={member.id}>
                     {member.name}
                   </MenuItem>
                 ))}
-              </TextField>
+              </FormField>
             </Stack>
-            <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-              <TextField
+            <Stack direction={{ xs: "column", sm: "row" }} spacing="16px">
+              <FormField
                 label="Circle"
                 select
-                fullWidth
                 defaultValue={preselectedCircleId}
                 {...register("circleId", {
                   onChange: (e) => setParticipantIds(getCircle(e.target.value)?.memberIds ?? []),
@@ -160,19 +145,17 @@ function AddExpenseForm() {
                     {c.name}
                   </MenuItem>
                 ))}
-              </TextField>
-              <TextField label="Category" select fullWidth defaultValue={CATEGORIES[0]} {...register("category")}>
+              </FormField>
+              <FormField label="Category" select defaultValue={CATEGORIES[0]} {...register("category")}>
                 {CATEGORIES.map((cat) => (
                   <MenuItem key={cat} value={cat}>
                     {cat}
                   </MenuItem>
                 ))}
-              </TextField>
+              </FormField>
             </Stack>
 
-            <Typography variant="subtitle1" sx={{ fontWeight: 700, pt: 1 }}>
-              Participants
-            </Typography>
+            <Typography sx={{ fontSize: 11, fontWeight: 800, color: "#74869D" }}>Participants</Typography>
             <Stack direction="row" sx={{ flexWrap: "wrap" }}>
               {circleMembers.map((member) => (
                 <FormControlLabel
@@ -184,25 +167,23 @@ function AddExpenseForm() {
                     />
                   }
                   label={member.name}
+                  slotProps={{ typography: { sx: { fontSize: 13 } } }}
                 />
               ))}
             </Stack>
 
-            <Typography variant="subtitle1" sx={{ fontWeight: 700, pt: 1 }}>
-              Split calculation
-            </Typography>
+            <Typography sx={{ fontSize: 11, fontWeight: 800, color: "#74869D" }}>Split calculation</Typography>
             <SplitModeTabs value={splitMode} onChange={setSplitMode} />
 
             {splitMode === "percentage" && (
-              <Stack spacing={1.5}>
+              <Stack spacing="12px">
                 {circleMembers
                   .filter((m) => participantIds.includes(m.id))
                   .map((member) => (
-                    <TextField
+                    <FormField
                       key={member.id}
                       label={`${member.name} %`}
                       type="number"
-                      size="small"
                       value={percentages[member.id] ?? ""}
                       onChange={(e) => setPercentages((prev) => ({ ...prev, [member.id]: e.target.value }))}
                     />
@@ -210,15 +191,14 @@ function AddExpenseForm() {
               </Stack>
             )}
             {splitMode === "exact" && (
-              <Stack spacing={1.5}>
+              <Stack spacing="12px">
                 {circleMembers
                   .filter((m) => participantIds.includes(m.id))
                   .map((member) => (
-                    <TextField
+                    <FormField
                       key={member.id}
                       label={`${member.name} amount`}
                       type="number"
-                      size="small"
                       value={exactAmounts[member.id] ?? ""}
                       onChange={(e) => setExactAmounts((prev) => ({ ...prev, [member.id]: e.target.value }))}
                     />
@@ -226,15 +206,14 @@ function AddExpenseForm() {
               </Stack>
             )}
             {splitMode === "shares" && (
-              <Stack spacing={1.5}>
+              <Stack spacing="12px">
                 {circleMembers
                   .filter((m) => participantIds.includes(m.id))
                   .map((member) => (
-                    <TextField
+                    <FormField
                       key={member.id}
                       label={`${member.name} shares`}
                       type="number"
-                      size="small"
                       value={shareCounts[member.id] ?? ""}
                       onChange={(e) => setShareCounts((prev) => ({ ...prev, [member.id]: e.target.value }))}
                     />
@@ -242,11 +221,11 @@ function AddExpenseForm() {
               </Stack>
             )}
 
-            <Button variant="contained" size="large" disabled={!result.valid} sx={{ alignSelf: "flex-start" }}>
+            <ActionButton disabled={!result.valid} sx={{ alignSelf: "flex-start" }}>
               Review split
-            </Button>
+            </ActionButton>
           </Stack>
-        </Paper>
+        </SoftCard>
 
         <Stack sx={{ flex: 1, width: "100%" }}>
           <AllocationPreview
@@ -256,7 +235,7 @@ function AddExpenseForm() {
           />
         </Stack>
       </Stack>
-    </Stack>
+    </Box>
   );
 }
 

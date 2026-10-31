@@ -1,16 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
+import { useRouter } from "next/navigation";
+import { Box, Stack, Typography } from "@mui/material";
 
 import { useAppSelector } from "@/lib/store/hooks";
-import { formatCurrency, formatSignedCurrency } from "@/lib/format/currency";
-import { circles } from "@/lib/domain/mock-data";
-import { BRAND_TINT } from "@/lib/theme/theme";
+import { formatCurrency } from "@/lib/format/currency";
+import { circles, monthlySavingsCaption, monthlySavingsCents, overviewInsights } from "@/lib/domain/mock-data";
+import { ActionButton } from "@/components/common/ActionButton";
+import { HeroBanner } from "@/components/common/HeroBanner";
+import { PageHeader } from "@/components/common/PageHeader";
+import { Row } from "@/components/common/Row";
+import { SectionHeader } from "@/components/common/SectionHeader";
+import { SoftCard } from "@/components/common/SoftCard";
+import { SpendingRhythmChart } from "@/components/common/SpendingRhythmChart";
 import { StatCard } from "@/components/common/StatCard";
 
 export default function OverviewPage() {
   const currency = useAppSelector((state) => state.preferences.currency);
+  const router = useRouter();
 
   const owedToYouCents = circles
     .filter((c) => c.netBalanceCents > 0)
@@ -20,69 +28,104 @@ export default function OverviewPage() {
     .reduce((sum, c) => sum + Math.abs(c.netBalanceCents), 0);
 
   return (
-    <Stack spacing={4}>
-      <Stack spacing={0.5}>
-        <Typography variant="overline" color="text.secondary">
-          Workspace / Overview
-        </Typography>
-        <Typography variant="h4" sx={{ fontWeight: 700 }}>
-          Your money, beautifully in sync.
-        </Typography>
-        <Typography variant="body1" color="text.secondary">
-          Dashboard with clear balances and rapid actions.
-        </Typography>
-      </Stack>
+    <Box>
+      <PageHeader
+        eyebrow="Your financial space"
+        title="Good morning, Alex ✳"
+        subtitle="A smarter way to manage money, together and on your own."
+        action={
+          <ActionButton component={Link} href="/add-expense">
+            ＋ New expense
+          </ActionButton>
+        }
+      />
 
-      <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
+      <HeroBanner />
+
+      <Stack direction={{ xs: "column", sm: "row" }} spacing="18px">
         <StatCard
-          label="Owed to you"
+          label="Total owed to you"
           value={formatCurrency(owedToYouCents, currency)}
-          caption="Across your circles"
+          caption="↗ +12.5% this month"
           captionColor="success.main"
         />
         <StatCard
-          label="You owe"
+          label="You owe others"
           value={formatCurrency(youOweCents, currency)}
-          caption="Settle up when ready"
+          caption="Across 2 expenses"
           captionColor="error.main"
         />
-        <StatCard label="Open circles" value={String(circles.length)} caption="Active this month" />
+        <StatCard
+          label="Monthly savings"
+          value={formatCurrency(monthlySavingsCents, currency)}
+          caption={`↗ ${monthlySavingsCaption}`}
+          captionColor="success.main"
+        />
       </Stack>
 
-      <Paper variant="outlined" sx={{ p: 3, borderRadius: 3 }}>
-        <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
-          Your circles
-        </Typography>
-        <Stack divider={<Box sx={{ borderBottom: "1px solid", borderColor: "divider" }} />} spacing={2}>
-          {circles.map((circle) => (
-            <Stack
-              key={circle.id}
-              component={Link}
-              href={`/circles/${circle.id}`}
-              direction="row"
-              sx={{ justifyContent: "space-between", alignItems: "center", textDecoration: "none", color: "inherit" }}
-            >
-              <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
-                <Avatar sx={{ bgcolor: BRAND_TINT, color: "primary.main", fontWeight: 700, width: 36, height: 36 }}>
-                  {circle.name.charAt(0)}
-                </Avatar>
-                <Stack>
-                  <Typography sx={{ fontWeight: 600 }}>{circle.name}</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    {circle.groupType} · {circle.memberIds.length} members
+      <Stack direction={{ xs: "column", md: "row" }} spacing="18px" sx={{ mt: "19px" }}>
+        <SoftCard sx={{ flex: 1 }}>
+          <SectionHeader title="Your circles" actionLabel="View all" onAction={() => router.push("/circles")} />
+          {circles.map((circle, i) => (
+            <Box key={circle.id} component={Link} href={`/circles/${circle.id}`} sx={{ display: "block" }}>
+              <Row
+                icon={circle.icon}
+                title={circle.name}
+                subtitle={`${circle.groupType} · ${circle.memberIds.length} members`}
+                trailing={
+                  <Typography
+                    sx={{ fontSize: 12, fontWeight: 700 }}
+                    color={circle.netBalanceCents >= 0 ? "success.main" : "error.main"}
+                  >
+                    {formatCurrency(circle.netBalanceCents, currency)}
                   </Typography>
-                </Stack>
-              </Stack>
-              <Typography
-                sx={{ fontWeight: 700 }}
-                color={circle.netBalanceCents >= 0 ? "success.main" : "error.main"}
-              >
-                {formatSignedCurrency(circle.netBalanceCents, currency)}
-              </Typography>
-            </Stack>
+                }
+                last={i === circles.length - 1}
+              />
+            </Box>
           ))}
-        </Stack>
-      </Paper>
-    </Stack>
+        </SoftCard>
+
+        <SoftCard sx={{ flex: 1 }}>
+          <SectionHeader title="Spending rhythm" />
+          <Typography sx={{ color: "text.secondary", fontSize: 12 }}>Your last seven months</Typography>
+          <SpendingRhythmChart />
+        </SoftCard>
+
+        <SoftCard sx={{ flex: 1 }}>
+          <SectionHeader title="Smart insights" />
+          <Stack spacing="12px">
+            {overviewInsights.map((insight) => (
+              <Stack
+                key={insight.title}
+                direction="row"
+                spacing="12px"
+                sx={{ bgcolor: "#EBF5FF", border: "1px solid #DBEAFF", borderRadius: "15px", p: "16px" }}
+              >
+                <Box
+                  sx={{
+                    bgcolor: "white",
+                    borderRadius: "10px",
+                    width: 33,
+                    height: 33,
+                    display: "grid",
+                    placeItems: "center",
+                    flexShrink: 0,
+                  }}
+                >
+                  ✦
+                </Box>
+                <Box>
+                  <Typography sx={{ fontSize: 11, fontWeight: 700 }}>{insight.title}</Typography>
+                  <Typography sx={{ fontSize: 10, color: "#7087A1", lineHeight: 1.8, mt: "5px" }}>
+                    {insight.body}
+                  </Typography>
+                </Box>
+              </Stack>
+            ))}
+          </Stack>
+        </SoftCard>
+      </Stack>
+    </Box>
   );
 }
