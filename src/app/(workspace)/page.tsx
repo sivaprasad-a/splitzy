@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Box, Paper, Stack, Typography } from "@mui/material";
+import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
 
 import { useAppSelector } from "@/lib/store/hooks";
 import { formatCurrency, formatSignedCurrency } from "@/lib/format/currency";
 import { circles } from "@/lib/domain/mock-data";
+import { BRAND_TINT } from "@/lib/theme/theme";
 import { StatCard } from "@/components/common/StatCard";
 
 export default function OverviewPage() {
@@ -61,11 +62,16 @@ export default function OverviewPage() {
               direction="row"
               sx={{ justifyContent: "space-between", alignItems: "center", textDecoration: "none", color: "inherit" }}
             >
-              <Stack>
-                <Typography sx={{ fontWeight: 600 }}>{circle.name}</Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {circle.groupType} · {circle.memberIds.length} members
-                </Typography>
+              <Stack direction="row" spacing={1.5} sx={{ alignItems: "center" }}>
+                <Avatar sx={{ bgcolor: BRAND_TINT, color: "primary.main", fontWeight: 700, width: 36, height: 36 }}>
+                  {circle.name.charAt(0)}
+                </Avatar>
+                <Stack>
+                  <Typography sx={{ fontWeight: 600 }}>{circle.name}</Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {circle.groupType} · {circle.memberIds.length} members
+                  </Typography>
+                </Stack>
               </Stack>
               <Typography
                 sx={{ fontWeight: 700 }}

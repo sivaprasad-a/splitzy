@@ -3,30 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Box, List, ListItemButton, ListItemIcon, ListItemText, Tooltip, Typography } from "@mui/material";
-import DashboardOutlinedIcon from "@mui/icons-material/DashboardOutlined";
-import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
-import AddCircleOutlinedIcon from "@mui/icons-material/AddCircleOutlined";
-import PersonOutlinedIcon from "@mui/icons-material/PersonOutlined";
-import SavingsOutlinedIcon from "@mui/icons-material/SavingsOutlined";
-import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
-import SwapHorizOutlinedIcon from "@mui/icons-material/SwapHorizOutlined";
 
-interface NavItem {
-  label: string;
-  href?: string;
-  icon: React.ReactNode;
-  comingIn?: string;
-}
+import { alpha } from "@mui/material/styles";
 
-const navItems: NavItem[] = [
-  { label: "Overview", href: "/", icon: <DashboardOutlinedIcon fontSize="small" /> },
-  { label: "Circles", href: "/circles", icon: <GroupsOutlinedIcon fontSize="small" /> },
-  { label: "Add expense", href: "/add-expense", icon: <AddCircleOutlinedIcon fontSize="small" /> },
-  { label: "Personal", icon: <PersonOutlinedIcon fontSize="small" />, comingIn: "Phase 3" },
-  { label: "Savings", icon: <SavingsOutlinedIcon fontSize="small" />, comingIn: "Phase 3" },
-  { label: "Reports", icon: <DescriptionOutlinedIcon fontSize="small" />, comingIn: "Phase 4" },
-  { label: "Settlements", href: "/settlements", icon: <SwapHorizOutlinedIcon fontSize="small" /> },
-];
+import { BRAND_COLORS } from "@/lib/theme/theme";
+import { Logo } from "@/components/common/Logo";
+import { navItems } from "./navItems";
+
+export const SIDEBAR_WIDTH = 240;
+const SELECTED_BG = alpha(BRAND_COLORS.electricCyan, 0.18);
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -35,20 +20,24 @@ export function Sidebar() {
     <Box
       component="nav"
       sx={{
-        width: 240,
+        width: SIDEBAR_WIDTH,
         flexShrink: 0,
-        bgcolor: "#0b1a3a",
+        position: "fixed",
+        insetBlock: 0,
+        left: 0,
+        bgcolor: BRAND_COLORS.midnightNavy,
         color: "white",
         display: { xs: "none", md: "flex" },
         flexDirection: "column",
         px: 2,
         py: 3,
         gap: 3,
+        overflowY: "auto",
       }}
     >
-      <Typography variant="h6" sx={{ fontWeight: 700 }}>
-        Splitzy
-      </Typography>
+      <Box sx={{ pl: 1 }}>
+        <Logo />
+      </Box>
 
       <Box>
         <Typography variant="overline" sx={{ opacity: 0.6, pl: 1 }}>
@@ -69,7 +58,7 @@ export function Sidebar() {
                   borderRadius: 2,
                   mb: 0.5,
                   color: "white",
-                  "&.Mui-selected": { bgcolor: "rgba(56,189,248,0.18)" },
+                  "&.Mui-selected": { bgcolor: SELECTED_BG },
                   "&.Mui-disabled": { color: "rgba(255,255,255,0.4)" },
                 }}
               >

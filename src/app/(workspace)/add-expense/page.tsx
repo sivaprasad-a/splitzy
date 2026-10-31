@@ -127,7 +127,7 @@ function AddExpenseForm() {
               error={!!errors.title}
               helperText={errors.title?.message}
             />
-            <Stack direction="row" spacing={2}>
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
               <TextField
                 label="Amount"
                 type="number"
@@ -145,7 +145,7 @@ function AddExpenseForm() {
                 ))}
               </TextField>
             </Stack>
-            <Stack direction="row" spacing={2}>
+            <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
               <TextField
                 label="Circle"
                 select

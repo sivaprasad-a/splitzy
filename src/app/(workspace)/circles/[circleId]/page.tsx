@@ -8,6 +8,7 @@ import { Box, Button, Paper, Stack, Typography } from "@mui/material";
 import { useAppSelector } from "@/lib/store/hooks";
 import { formatCurrency, formatSignedCurrency } from "@/lib/format/currency";
 import { getCircle, getExpensesForCircle, getMember, memberBalancesByCircle } from "@/lib/domain/mock-data";
+import { BRAND_COLORS } from "@/lib/theme/theme";
 
 export default function CircleDetailPage({ params }: { params: Promise<{ circleId: string }> }) {
   const { circleId } = use(params);
@@ -33,7 +34,7 @@ export default function CircleDetailPage({ params }: { params: Promise<{ circleI
         </Typography>
       </Stack>
 
-      <Paper sx={{ p: 4, borderRadius: 3, bgcolor: "#0b1a3a", color: "white" }}>
+      <Paper sx={{ p: 4, borderRadius: 3, bgcolor: BRAND_COLORS.midnightNavy, color: "white" }}>
         <Stack
           direction={{ xs: "column", sm: "row" }}
           spacing={2}

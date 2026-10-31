@@ -1,6 +1,7 @@
 import { Avatar, Button, Stack, Typography } from "@mui/material";
 
 import { formatSignedCurrency, type Currency } from "@/lib/format/currency";
+import { BRAND_TINT } from "@/lib/theme/theme";
 import type { Member } from "@/lib/domain/types";
 import type { Circle } from "@/lib/domain/types";
 
@@ -20,7 +21,7 @@ export function OpenBalanceRow({
   return (
     <Stack direction="row" spacing={2} sx={{ alignItems: "center", justifyContent: "space-between", py: 1.5 }}>
       <Stack direction="row" spacing={2} sx={{ alignItems: "center" }}>
-        <Avatar sx={{ bgcolor: "#e4edfb", color: "primary.main", fontWeight: 700 }}>{member.initials}</Avatar>
+        <Avatar sx={{ bgcolor: BRAND_TINT, color: "primary.main", fontWeight: 700 }}>{member.initials}</Avatar>
         <Stack>
           <Typography sx={{ fontWeight: 600 }}>{member.name}</Typography>
           <Typography variant="body2" color="text.secondary">
