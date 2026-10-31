@@ -1,8 +1,11 @@
 name: CI
 
 on:
+  # Every PR gets CI, regardless of target branch — a branches filter here
+  # using "sprint-*" looked right but silently skipped task-branch-on-task-
+  # branch PRs (e.g. a task branched from another task branch), since "*"
+  # in a GitHub Actions branch glob never crosses "/".
   pull_request:
-    branches: [main, develop, "uat/testing", "production/release", "sprint-*"]
   push:
     branches: [develop, "uat/testing", "production/release"]
 
