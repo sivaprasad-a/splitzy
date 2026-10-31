@@ -3,11 +3,13 @@ import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 interface PreferencesState {
   currency: "USD" | "INR";
   reducedMotion: boolean;
+  sidebarCollapsed: boolean;
 }
 
 const initialState: PreferencesState = {
   currency: "USD",
   reducedMotion: false,
+  sidebarCollapsed: false,
 };
 
 const preferencesSlice = createSlice({
@@ -20,8 +22,11 @@ const preferencesSlice = createSlice({
     setReducedMotion(state, action: PayloadAction<boolean>) {
       state.reducedMotion = action.payload;
     },
+    toggleSidebarCollapsed(state) {
+      state.sidebarCollapsed = !state.sidebarCollapsed;
+    },
   },
 });
 
-export const { setCurrency, setReducedMotion } = preferencesSlice.actions;
+export const { setCurrency, setReducedMotion, toggleSidebarCollapsed } = preferencesSlice.actions;
 export default preferencesSlice.reducer;
