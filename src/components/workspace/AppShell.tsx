@@ -1,10 +1,16 @@
+"use client";
+
 import { Box } from "@mui/material";
 
-import { Sidebar, SIDEBAR_WIDTH } from "./Sidebar";
+import { useAppSelector } from "@/lib/store/hooks";
+import { Sidebar, SIDEBAR_WIDTH_COLLAPSED, SIDEBAR_WIDTH_EXPANDED } from "./Sidebar";
 import { Topbar } from "./Topbar";
 import { BottomNav } from "./BottomNav";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
+  const collapsed = useAppSelector((state) => state.preferences.sidebarCollapsed);
+  const sidebarWidth = collapsed ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH_EXPANDED;
+
   return (
     <Box sx={{ minHeight: "100dvh" }}>
       <Sidebar />
@@ -14,7 +20,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           flexDirection: "column",
           minWidth: 0,
           minHeight: "100dvh",
-          ml: { xs: 0, md: `${SIDEBAR_WIDTH}px` },
+          ml: { xs: 0, md: `${sidebarWidth}px` },
+          transition: (theme) => theme.transitions.create("margin-left", { duration: 200 }),
         }}
       >
         <Topbar />
