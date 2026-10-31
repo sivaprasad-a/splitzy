@@ -18,7 +18,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 
 import { useAppDispatch, useAppSelector } from "@/lib/store/hooks";
-import { toggleSidebarCollapsed } from "@/lib/store/slices/preferencesSlice";
+import { setAiPanelOpen, toggleSidebarCollapsed } from "@/lib/store/slices/preferencesSlice";
 import { BRAND_COLORS } from "@/lib/theme/theme";
 import { Logo } from "@/components/common/Logo";
 import { navItems } from "./navItems";
@@ -37,9 +37,10 @@ export function Sidebar() {
       component="nav"
       sx={{
         width,
+        height: "100vh",
         flexShrink: 0,
         position: "fixed",
-        insetBlock: 0,
+        top: 0,
         left: 0,
         bgcolor: BRAND_COLORS.midnightNavy,
         color: "white",
@@ -48,8 +49,7 @@ export function Sidebar() {
         gap: "40px",
         px: collapsed ? "12px" : "19px",
         py: "28px",
-        overflowY: "auto",
-        overflowX: "hidden",
+        overflow: "hidden",
         transition: (theme) => theme.transitions.create("width", { duration: 200 }),
       }}
     >
@@ -146,27 +146,23 @@ export function Sidebar() {
           <Typography sx={{ fontSize: 11, color: "#B6C7DF", lineHeight: 1.8, mt: 0.5 }}>
             Helpful insights and more confident money decisions.
           </Typography>
-          <Tooltip title="Splitzy IQ is planned for a later phase" placement="top">
-            <span>
-              <Button
-                fullWidth
-                size="small"
-                disabled
-                sx={{
-                  mt: "14px",
-                  bgcolor: "#DEF3FF",
-                  color: "#13447E",
-                  fontSize: 11,
-                  fontWeight: 800,
-                  borderRadius: "9px",
-                  py: "10px",
-                  "&.Mui-disabled": { bgcolor: "#DEF3FF", color: "#13447E", opacity: 0.7 },
-                }}
-              >
-                Explore insights →
-              </Button>
-            </span>
-          </Tooltip>
+          <Button
+            fullWidth
+            size="small"
+            onClick={() => dispatch(setAiPanelOpen(true))}
+            sx={{
+              mt: "14px",
+              bgcolor: "#DEF3FF",
+              color: "#13447E",
+              fontSize: 11,
+              fontWeight: 800,
+              borderRadius: "9px",
+              py: "10px",
+              "&:hover": { bgcolor: "#c9ebff" },
+            }}
+          >
+            Explore insights →
+          </Button>
         </Box>
       )}
     </Box>

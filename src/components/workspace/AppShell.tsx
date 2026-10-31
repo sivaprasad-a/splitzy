@@ -6,6 +6,7 @@ import { useAppSelector } from "@/lib/store/hooks";
 import { Sidebar, SIDEBAR_WIDTH_COLLAPSED, SIDEBAR_WIDTH_EXPANDED } from "./Sidebar";
 import { Topbar } from "./Topbar";
 import { BottomNav } from "./BottomNav";
+import { SplitzyIQLauncher } from "./SplitzyIQLauncher";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const collapsed = useAppSelector((state) => state.preferences.sidebarCollapsed);
@@ -35,6 +36,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </Box>
       </Box>
       <BottomNav />
+      <SplitzyIQLauncher />
     </Box>
   );
 }

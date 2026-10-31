@@ -1,8 +1,12 @@
-import { Box, Stack, Tooltip, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 
+import { useAppDispatch } from "@/lib/store/hooks";
+import { setAiPanelOpen } from "@/lib/store/slices/preferencesSlice";
 import { ActionButton } from "./ActionButton";
 
 export function HeroBanner() {
+  const dispatch = useAppDispatch();
+
   return (
     <Box
       sx={{
@@ -45,16 +49,9 @@ export function HeroBanner() {
         <Typography sx={{ color: "#B7CBE8", fontSize: 11, lineHeight: 1.8, maxWidth: 390 }}>
           Every bill, balance and saving goal. Beautifully connected in one place.
         </Typography>
-        <Tooltip title="Splitzy IQ is planned for a later phase">
-          <span>
-            <ActionButton
-              disabled
-              sx={{ bgcolor: "white", color: "#12477D", "&.Mui-disabled": { bgcolor: "white", color: "#12477D", opacity: 0.85 } }}
-            >
-              ✦ Explore your insights →
-            </ActionButton>
-          </span>
-        </Tooltip>
+        <ActionButton onClick={() => dispatch(setAiPanelOpen(true))} sx={{ bgcolor: "white", color: "#12477D" }}>
+          ✦ Explore your insights →
+        </ActionButton>
       </Stack>
 
       {/* eslint-disable-next-line @next/next/no-img-element -- static brand SVG */}

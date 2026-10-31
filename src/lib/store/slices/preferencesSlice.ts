@@ -4,12 +4,14 @@ interface PreferencesState {
   currency: "USD" | "INR";
   reducedMotion: boolean;
   sidebarCollapsed: boolean;
+  aiPanelOpen: boolean;
 }
 
 const initialState: PreferencesState = {
   currency: "USD",
   reducedMotion: false,
   sidebarCollapsed: false,
+  aiPanelOpen: false,
 };
 
 const preferencesSlice = createSlice({
@@ -25,8 +27,11 @@ const preferencesSlice = createSlice({
     toggleSidebarCollapsed(state) {
       state.sidebarCollapsed = !state.sidebarCollapsed;
     },
+    setAiPanelOpen(state, action: PayloadAction<boolean>) {
+      state.aiPanelOpen = action.payload;
+    },
   },
 });
 
-export const { setCurrency, setReducedMotion, toggleSidebarCollapsed } = preferencesSlice.actions;
+export const { setCurrency, setReducedMotion, toggleSidebarCollapsed, setAiPanelOpen } = preferencesSlice.actions;
 export default preferencesSlice.reducer;
