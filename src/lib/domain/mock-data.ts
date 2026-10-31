@@ -22,6 +22,7 @@ export const circles: Circle[] = [
     groupType: "friends",
     memberIds: ["you", "alex", "jordan", "samira", "nora"],
     netBalanceCents: 8650,
+    icon: "✦",
   },
   {
     id: "the-apartment",
@@ -29,6 +30,7 @@ export const circles: Circle[] = [
     groupType: "roommates",
     memberIds: ["you", "alex", "samira"],
     netBalanceCents: -4200,
+    icon: "⌂",
   },
   {
     id: "product-team",
@@ -36,6 +38,7 @@ export const circles: Circle[] = [
     groupType: "corporate",
     memberIds: ["you", "alex", "jordan", "samira", "nora", "chris"],
     netBalanceCents: 12675,
+    icon: "▥",
   },
 ];
 
@@ -94,6 +97,25 @@ export const settlements: SettlementBalance[] = [
   { id: "settle-jordan", memberId: "jordan", circleId: "scottsdale-crew", amountCents: 5250 },
   { id: "settle-samira", memberId: "samira", circleId: "product-team", amountCents: 12675 },
   { id: "settle-you", memberId: "alex", circleId: "the-apartment", amountCents: -4200 },
+];
+
+/** Static sample dashboard data, matching the approved reference mock. */
+export const monthlySavingsCents = 68000;
+export const monthlySavingsCaption = "18% above goal";
+
+export const spendingRhythm = [
+  { month: "Apr", pctOfPeak: 48 },
+  { month: "May", pctOfPeak: 73 },
+  { month: "Jun", pctOfPeak: 56 },
+  { month: "Jul", pctOfPeak: 83 },
+  { month: "Aug", pctOfPeak: 53 },
+  { month: "Sep", pctOfPeak: 90 },
+  { month: "Oct", pctOfPeak: 68 },
+];
+
+export const overviewInsights = [
+  { title: "Your spending looks healthy", body: "Dining costs are 14% lower in this sample month." },
+  { title: "Small steps, big goals", body: "Try adding $50 to your savings projection." },
 ];
 
 export function getMember(id: string): Member | undefined {

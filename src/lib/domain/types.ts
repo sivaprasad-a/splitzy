@@ -15,6 +15,8 @@ export interface Circle {
   memberIds: string[];
   /** Net balance for the current user within this circle, in cents. Positive = owed to you. */
   netBalanceCents: number;
+  /** Decorative tile glyph shown on circle cards/rows. */
+  icon: string;
 }
 
 export interface Expense {

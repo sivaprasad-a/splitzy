@@ -6,18 +6,18 @@ import { useAppSelector } from "@/lib/store/hooks";
 import { Sidebar, SIDEBAR_WIDTH_COLLAPSED, SIDEBAR_WIDTH_EXPANDED } from "./Sidebar";
 import { Topbar } from "./Topbar";
 import { BottomNav } from "./BottomNav";
+import { SplitzyIQLauncher } from "./SplitzyIQLauncher";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const collapsed = useAppSelector((state) => state.preferences.sidebarCollapsed);
   const sidebarWidth = collapsed ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH_EXPANDED;
 
   return (
-    <Box sx={{ minHeight: "100dvh" }}>
+    <Box sx={{ minHeight: "100dvh", bgcolor: "background.default" }}>
       <Sidebar />
       <Box
+        component="main"
         sx={{
-          display: "flex",
-          flexDirection: "column",
           minWidth: 0,
           minHeight: "100dvh",
           ml: { xs: 0, md: `${sidebarWidth}px` },
@@ -26,19 +26,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       >
         <Topbar />
         <Box
-          component="main"
           sx={{
-            flex: 1,
-            px: { xs: 2, md: 4 },
-            py: { xs: 2, md: 4 },
+            px: { xs: 2, md: "38px" },
             // Clear the fixed mobile bottom nav (56px bar + safe area).
-            pb: { xs: "calc(72px + env(safe-area-inset-bottom))", md: 4 },
+            pb: { xs: "calc(72px + env(safe-area-inset-bottom))", md: "38px" },
           }}
         >
           {children}
         </Box>
       </Box>
       <BottomNav />
+      <SplitzyIQLauncher />
     </Box>
   );
 }
