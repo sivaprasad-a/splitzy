@@ -15,7 +15,9 @@ import { navItems } from "./navItems";
 
 export const SIDEBAR_WIDTH_EXPANDED = 240;
 export const SIDEBAR_WIDTH_COLLAPSED = 76;
-const SELECTED_BG = alpha(BRAND_COLORS.electricCyan, 0.18);
+const SELECTED_BG = alpha(BRAND_COLORS.electricCyan, 0.14);
+const INACTIVE_TEXT = "rgba(255,255,255,0.56)";
+const DISABLED_TEXT = "rgba(255,255,255,0.28)";
 
 export function Sidebar() {
   const pathname = usePathname();
@@ -82,7 +84,7 @@ export function Sidebar() {
             Workspace
           </Typography>
         )}
-        <List dense disablePadding sx={{ mt: 1 }}>
+        <List dense disablePadding sx={{ mt: 1, display: "flex", flexDirection: "column", gap: 1.5 }}>
           {navItems.map((item) => {
             const disabled = !item.href;
             const active = item.href === "/" ? pathname === "/" : !!item.href && pathname.startsWith(item.href);
@@ -93,19 +95,44 @@ export function Sidebar() {
                 {...(disabled ? {} : { component: Link, href: item.href })}
                 disabled={disabled}
                 selected={active}
+                disableTouchRipple
                 sx={{
+                  position: "relative",
                   borderRadius: 2,
-                  mb: 0.5,
-                  color: "white",
+                  px: collapsed ? 1.5 : 2,
+                  py: 1.25,
+                  color: INACTIVE_TEXT,
                   justifyContent: collapsed ? "center" : "flex-start",
-                  "&.Mui-selected": { bgcolor: SELECTED_BG },
-                  "&.Mui-disabled": { color: "rgba(255,255,255,0.4)" },
+                  transition: (theme) => theme.transitions.create("color", { duration: 150 }),
+                  "&:hover": { bgcolor: "transparent", color: "white" },
+                  "&.Mui-selected": {
+                    bgcolor: SELECTED_BG,
+                    color: "white",
+                    fontWeight: 700,
+                    "&:hover": { bgcolor: SELECTED_BG },
+                    "&::before": {
+                      content: '""',
+                      position: "absolute",
+                      left: 0,
+                      top: 8,
+                      bottom: 8,
+                      width: 3,
+                      borderRadius: 4,
+                      bgcolor: BRAND_COLORS.electricCyan,
+                    },
+                  },
+                  "&.Mui-disabled": { color: DISABLED_TEXT },
                 }}
               >
                 <ListItemIcon sx={{ color: "inherit", minWidth: collapsed ? 0 : 36, justifyContent: "center" }}>
                   {item.icon}
                 </ListItemIcon>
-                {!collapsed && <ListItemText primary={item.label} />}
+                {!collapsed && (
+                  <ListItemText
+                    primary={item.label}
+                    slotProps={{ primary: { sx: { fontWeight: active ? 700 : 500 } } }}
+                  />
+                )}
               </ListItemButton>
             );
 
